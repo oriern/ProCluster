@@ -10,6 +10,7 @@ You can use `py36.yml` to restore all requirements.
 
   1. Download the trained models from [here](), and put them in 'models' directory.
   2. Extract all Open Information Extraction (OIE) spans from the source documents:
+    
     ```
       python extract_OIEs.py
     ```
