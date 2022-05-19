@@ -19,10 +19,11 @@ You can use `py36.yml` to restore all requirements.
     python DataGenSalientIU_DUC_allAlignments_CDLM.py
   ```
   5. Predict salience score for each OIE span:
-    ```
+  ```
     python extract_OIEs.py
   ```
-  5*.**[Optional]** Cluster salient spans, rank clusters, and select the most salient span to represent each cluster:
+ 
+  **[Optional]** 5*. Cluster salient spans, rank clusters, and select the most salient span to represent each cluster:
     ("Salience_prop + Clustering" model in Sec 4.3 in the paper)
    ```
     python deriveSummaryDUC.py
