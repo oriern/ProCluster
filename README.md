@@ -16,10 +16,27 @@ You can use `py36.yml` to restore all requirements.
   ```
   4. Prepare the data for the Salience model:
   ```
-    python extract_OIEs.py
+    python DataGenSalientIU_DUC_allAlignments_CDLM.py
   ```
   5. Predict salience score for each OIE span:
     ```
     python extract_OIEs.py
   ```
-  6. 
+  5*.**[Optional]** Cluster salient spans, rank clusters, and select the most salient span to represent each cluster:
+    ("Salience_prop + Clustering" model in Sec 4.3 in the paper)
+   ```
+    python deriveSummaryDUC.py
+  ```
+  
+  6. Cluster salient spans and prepare data for the Fusion model:
+   ```
+    python prepare_fusion_data.py
+  ```
+  7. Generate a fused sentence from every cluster:
+   ```
+    python deriveSummaryDUC_fusion_clusters.py
+  ```
+  8. Concatinate the fused sentences, and calculate final ROUGE scores:
+   ```
+    python deriveSummaryDUC_fusion_clusters.py
+  ```
