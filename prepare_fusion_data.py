@@ -117,7 +117,7 @@ if __name__ == "__main__":
     for SET in DATASETS:
 
         alignments = pd.read_csv(
-            '/home/nlp/ernstor1/alignmentEval/annotation_checker_pkg/Task3_Datasets/dev{}_checkpoint-2000_negative.csv'.format(SET))
+            './dev{}_checkpoint-2000_negative.csv'.format(SET))
 
         sys_summary_path = './{}_system_summaries/{}/{}_'.format(SET, sys_folder,
                                                                                                sys_checkpoint) + time.strftime(
