@@ -8,7 +8,7 @@ You can use `py36.yml` to restore all requirements.
 
 ## How to generate summaries? ##
 
-  1. Download the trained models from [here](), and put them in 'models' directory.
+  1. Download the trained models from [here](https://drive.google.com/file/d/1CNaTH1k5oflmGiljQ7JL6NQ_3uz5tdvq/view?usp=sharing), and put them in 'models' directory.
   2. Put your data in `data\<DATASET>\` directory. (For example `data\DUC2004\`)
   3. Extract all Open Information Extraction (OIE) spans from the source documents:
   ```
