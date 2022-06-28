@@ -13,6 +13,20 @@ You can use `py36.yml` to restore all requirements.
 
   1. Download the trained models from [here](https://drive.google.com/file/d/1CNaTH1k5oflmGiljQ7JL6NQ_3uz5tdvq/view?usp=sharing), and put them in 'models' directory.
   2. Put your data in `data\<DATASET>\` directory. (For example `data\DUC2004\`)
+  3. Setup Huggingface Transformers repository (v4.2.2):
+   
+     a. 
+      ```
+        git clone https://github.com/huggingface/transformers
+        git checkout v4.2.2-patch
+        cd transformers
+        pip install .
+      ```
+     
+     b. Move `transformers\modeling_longformer.py` from this repo to the new transformers repo: `transformers\src\transformers\models\longformer\modeling_longformer.py`
+     
+     c. Move `transformers\run_glue_highlighter.py` from this repo to the new transformers repo: `transformers\examples\text-classification\run_glue_highlighter.py`
+  
   3. Extract all Open Information Extraction (OIE) spans from the source documents:
   ```
     python extract_OIEs.py
