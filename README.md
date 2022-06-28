@@ -18,13 +18,17 @@ Code and Model for "Proposition-Level Clustering for Multi-Document Summarizatio
       ```
         git clone https://github.com/huggingface/transformers
         git checkout v4.2.2-patch
-        cd transformers
-        pip install .
       ```
      
      b. Move `transformers\modeling_longformer.py` from this repo to the new transformers repo: `transformers\src\transformers\models\longformer\modeling_longformer.py`
      
      c. Move `transformers\run_glue_highlighter.py` from this repo to the new transformers repo: `transformers\examples\text-classification\run_glue_highlighter.py`
+     
+     d. 
+      ```
+        cd transformers
+        pip install .
+      ```
   
   3. Extract all Open Information Extraction (OIE) spans from the source documents:
   ```
