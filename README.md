@@ -10,6 +10,8 @@ Code and Model for "Proposition-Level Clustering for Multi-Document Summarizatio
 
 ## How to generate summaries? ##
 
+### Preliminary steps ###
+
   1. Download the trained models from [here](https://drive.google.com/file/d/1CNaTH1k5oflmGiljQ7JL6NQ_3uz5tdvq/view?usp=sharing), and put them in 'models' directory.
   2. Put your data in `data\<DATASET>\` directory. (For example `data\DUC2004\`)
   3. Setup Huggingface Transformers repository (v4.2.2):
@@ -29,35 +31,48 @@ Code and Model for "Proposition-Level Clustering for Multi-Document Summarizatio
         cd transformers
         pip install .
       ```
+   4. Create similarity matrix by SuperPAL (to be used for the clustering step):
+     a. Clone [SuperPAL](https://github.com/oriern/SuperPAL) repository.
+     b. Move files from `SuperPAL` folder in this repository to the new `SuperPAL` repository.
+     c. Follow the steps that appear in SuperPAL repository under 'Alignment model' section.
+        Instead of step 2, run:
+        ```
+         python main_predict_inDoc.py -data_path <DATA_PATH>  -output_path <OUT_DIR_PATH>  -alignment_model_path  <ALIGNMENT_MODEL_PATH>
+        ```
+   **[Optional]** 5. Follow [this](https://github.com/OriShapira/SummEval_referenceSubsets) repository to install the official ROUGE measure. 
   
-  3. Extract all Open Information Extraction (OIE) spans from the source documents:
+  ### Generating summaries ###
+  
+  1. Extract all Open Information Extraction (OIE) spans from the source documents:
   ```
     python extract_OIEs.py
   ```
-  4. Prepare the data for the Salience model:
+  2. Prepare the data for the Salience model:
   ```
     python DataGenSalientIU_DUC_allAlignments_CDLM.py
   ```
-  5. Predict salience score for each OIE span:
+  3. Predict salience score for each OIE span:
   ```
-    python extract_OIEs.py
+     cd transformers\examples\text_classification\
+     python run_glue_highlighter.py --model_name_or_path <MODEL_PATH>  --train_file <DATA_CSV_FILE_PATH> --validation_file <DATA_CSV_FILE_PATH>   --do_predict   --evaluation_strategy steps --eval_steps 250 --save_steps 250 --max_seq_length 4096 --gradient_accumulation_steps 3 --per_device_train_batch_size 1 --per_device_eval_batch_size 1 --learning_rate 1e-5 --num_train_epochs 3 --output_dir <OUTPUT_DIR>
   ```
  
-  **[Optional]** 5*. Cluster salient spans, rank clusters, and select the most salient span to represent each cluster:
+  **[Optional]** 3*. Cluster salient spans, rank clusters, and select the most salient span to represent each cluster:
     ("Salience_prop + Clustering" model in Sec 4.3 in the paper)
    ```
     python deriveSummaryDUC.py
   ```
   
-  6. Cluster salient spans and prepare data for the Fusion model:
+  4. Cluster salient spans and prepare data for the Fusion model:
    ```
     python prepare_fusion_data.py
   ```
-  7. Generate a fused sentence from every cluster:
+  5. Generate a fused sentence from every cluster:
    ```
-    python deriveSummaryDUC_fusion_clusters.py
+    cd transformers\examples\seq2seq\
+    python finetune_trainer.py --model_name_or_path=<MODEL_PATH> --learning_rate=3e-5  --do_predict --num_train_epochs=4 --evaluation_strategy steps --predict_with_generate --eval_steps=50 --per_device_train_batch_size=10 --per_device_eval_batch_size=10 --max_source_length=265 --eval_beams=6 --max_target_length=30 --val_max_target_length=30 --test_max_target_length=30 --data_dir <DATA_CSV_FILE_PATH> --output_dir <OUTPUT_DIR>
   ```
-  8. Concatinate the fused sentences, and calculate final ROUGE scores:
+  6. Concatinate the fused sentences, and calculate final ROUGE scores:
    ```
     python deriveSummaryDUC_fusion_clusters.py
   ```
