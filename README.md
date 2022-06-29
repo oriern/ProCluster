@@ -32,13 +32,19 @@ Code and Model for "Proposition-Level Clustering for Multi-Document Summarizatio
         pip install .
       ```
    4. Create similarity matrix by SuperPAL (to be used for the clustering step):
-     a. Clone [SuperPAL](https://github.com/oriern/SuperPAL) repository.
-     b. Move files from `SuperPAL` folder in this repository to the new `SuperPAL` repository.
-     c. Follow the steps that appear in SuperPAL repository under 'Alignment model' section.
-        Instead of step 2, run:
-        ```
-         python main_predict_inDoc.py -data_path <DATA_PATH>  -output_path <OUT_DIR_PATH>  -alignment_model_path  <ALIGNMENT_MODEL_PATH>
-        ```
+     
+      a. Clone [SuperPAL](https://github.com/oriern/SuperPAL) repository.
+     
+      b. Move files from `SuperPAL` folder in this repository to the new `SuperPAL` repository.
+     
+      c. Follow the steps that appear in SuperPAL repository under 'Alignment model' section.
+         
+         &emsp;Instead of step 2, run:
+         
+         ```
+          python main_predict_inDoc.py -data_path <DATA_PATH>  -output_path <OUT_DIR_PATH>  -alignment_model_path  <ALIGNMENT_MODEL_PATH>
+         ```
+   
    **[Optional]** 5. Follow [this](https://github.com/OriShapira/SummEval_referenceSubsets) repository to install the official ROUGE measure. 
   
   ### Generating summaries ###
