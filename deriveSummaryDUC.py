@@ -395,7 +395,7 @@ def _block_tri(c, p):
     return False
 
 def read_simMats(topic_name, predictions_topic, dataset):
-    sim_mats_path = '/home/nlp/ernstor1/main_summarization/sim_mats/{}/'.format(dataset)
+    sim_mats_path = './sim_mats/{}/'.format(dataset)
 
 
     if dataset.startswith('TAC'):
