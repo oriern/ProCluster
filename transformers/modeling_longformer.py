@@ -2069,7 +2069,7 @@ class LongformerForSequenceClassification(LongformerPreTrainedModel):
         )
         sequence_output = outputs[0]
         span_mask = global_attention_mask[:]
-        span_mask[0] = 0
+        # span_mask[0] = 0
         logits = self.classifier(sequence_output, span_mask = span_mask)
 
         loss = None
