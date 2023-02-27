@@ -21,7 +21,7 @@ import random
 import sys
 from dataclasses import dataclass, field
 from typing import Optional
-
+from classification import LongformerForSequenceSpanClassification
 import pandas as pd
 from scipy.special import softmax
 
@@ -253,7 +253,8 @@ def main():
         cache_dir=model_args.cache_dir,
         use_fast=model_args.use_fast_tokenizer,
     )
-    model = AutoModelForSequenceClassification.from_pretrained(
+
+    model = LongformerForSequenceSpanClassification.from_pretrained(
         model_args.model_name_or_path,
         from_tf=bool(".ckpt" in model_args.model_name_or_path),
         config=config,
@@ -318,7 +319,7 @@ def main():
         label_to_id = {v: i for i, v in enumerate(label_list)}
 
 
-    def global_attention_idx2full_mask(input_ids, global_attention_idx,tokenizer):
+    def global_attention_idx2full_mask(input_ids, global_attention_idx, tokenizer):
 
         input_len = len(input_ids)
 
@@ -332,7 +333,7 @@ def main():
 
         new_global_attention_idx = []
         for i, k in zip(global_attention_idx[0::2], global_attention_idx[1::2]):
-            new_global_attention_idx.extend(range(i,k+1))
+            new_global_attention_idx.extend(range(i, k+1))
 
         global_attention_mask = np.zeros(input_len, dtype=int)  # initialize to global attention to be deactivated for all tokens
         global_attention_mask[new_global_attention_idx] = 1
