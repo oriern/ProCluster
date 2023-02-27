@@ -60,7 +60,7 @@ You are welcome to try our [demo](https://studio.oneai.com/). Look for the `Mult
   ```
   5. Generate a fused sentence from every cluster:
    ```
-    cd <PATH TO YOUR TRANSFORMERS DIR>\examples\seq2seq\
+    cd <PATH_TO_YOUR_TRANSFORMERS_DIR>\examples\seq2seq\
     python finetune_trainer.py --model_name_or_path=<MODEL_PATH> --learning_rate=3e-5  --do_predict --num_train_epochs=4 --evaluation_strategy steps --predict_with_generate --eval_steps=50 --per_device_train_batch_size=10 --per_device_eval_batch_size=10 --max_source_length=265 --eval_beams=6 --max_target_length=30 --val_max_target_length=30 --test_max_target_length=30 --data_dir <DATA_CSV_FILE_PATH> --output_dir <OUTPUT_DIR>
   ```
   6. Concatinate the fused sentences, and calculate final ROUGE scores:
