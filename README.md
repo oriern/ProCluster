@@ -15,23 +15,7 @@ You are welcome to try our [demo](https://studio.oneai.com/). Look for the `Mult
 
   1. Download the trained models from [here](https://drive.google.com/file/d/1CNaTH1k5oflmGiljQ7JL6NQ_3uz5tdvq/view?usp=sharing), and put them in 'models' directory.
   2. Put your data in `data\<DATASET>\` directory. (For example `data\DUC2004\`)
-  3. Setup Huggingface Transformers repository (v4.2.2):
-   
-     a. 
-      ```
-        git clone https://github.com/huggingface/transformers
-        git checkout v4.2.2-patch
-      ```
-     
-     b. Move `transformers\modeling_longformer.py` from this repo to the new transformers repo: `transformers\src\transformers\models\longformer\modeling_longformer.py`
-     
-     c. Move `transformers\run_glue_highlighter.py` from this repo to the new transformers repo: `transformers\examples\text-classification\run_glue_highlighter.py`
-     
-     d. 
-      ```
-        cd transformers
-        pip install .
-      ```
+  3. Install `requirements.txt` (python 3.6)
    4. Create similarity matrix by SuperPAL (to be used for the clustering step):
      
       a. Clone [SuperPAL](https://github.com/oriern/SuperPAL) repository.
