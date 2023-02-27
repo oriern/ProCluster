@@ -21,7 +21,7 @@ import random
 import sys
 from dataclasses import dataclass, field
 from typing import Optional
-from classification import LongformerForSequenceSpanClassification
+from LongformerForSequenceSpanClassification import LongformerForSequenceSpanClassification
 import pandas as pd
 from scipy.special import softmax
 
