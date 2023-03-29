@@ -12,7 +12,7 @@ from transformers.file_utils import (
     add_start_docstrings_to_model_forward,
 )
 from transformers import (
-    LongformerPreTrainedModel,
+#    LongformerPreTrainedModel,
     LongformerModel,
     LongformerForSequenceClassification
 )
@@ -84,7 +84,7 @@ LONGFORMER_INPUTS_DOCSTRING = r"""
 """
 
 
-class LongformerForSequenceSpanClassification(LongformerForSequenceClassification):
+class LongformerForSpanSequenceClassification(LongformerForSequenceClassification):
 
     _keys_to_ignore_on_load_unexpected = [r"pooler"]
 
