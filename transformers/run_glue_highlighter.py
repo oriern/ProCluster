@@ -21,7 +21,7 @@ import random
 import sys
 from dataclasses import dataclass, field
 from typing import Optional
-from LongformerForSequenceSpanClassification import LongformerForSequenceSpanClassification
+from LongformerForSpanSequenceClassification import LongformerForSpanSequenceClassification
 import pandas as pd
 from scipy.special import softmax
 
@@ -254,7 +254,7 @@ def main():
         use_fast=model_args.use_fast_tokenizer,
     )
 
-    model = LongformerForSequenceSpanClassification.from_pretrained(
+    model = LongformerForSpanSequenceClassification.from_pretrained(
         model_args.model_name_or_path,
         from_tf=bool(".ckpt" in model_args.model_name_or_path),
         config=config,
