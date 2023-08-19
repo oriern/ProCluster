@@ -21,7 +21,6 @@ def redirect_argv(num):
 parser = argparse.ArgumentParser()
 parser.add_argument('-data_path', type=str, required=True)
 parser.add_argument('-mode', type=str, default='dev')
-parser.add_argument('-input_file_path', type=str, required=True)
 parser.add_argument('-log_file', type=str, default='results/dev_log.txt')
 parser.add_argument('-output_path', type=str, required=True)
 parser.add_argument('-alignment_model_path', type=str, required=True)
@@ -31,7 +30,7 @@ args = parser.parse_args()
 
 
 
-aligner = inDoc2MRPC_Aligner(data_path=args.data_path, mode=args.mode, input_file_path=args.input_file_path,
+aligner = inDoc2MRPC_Aligner(data_path=args.data_path, mode=args.mode,
                  log_file=args.log_file, output_file = args.output_path,
                  database=args.database)
 logging.info(f'output_file_path: {args.output_path}')
