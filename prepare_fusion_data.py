@@ -162,6 +162,8 @@ if __name__ == "__main__":
 
                         if SET_TYPE != 'test':
                             fusion_target.append(find_abstractive_target(predictions_topic_cluster, alignments, topic))
+                        else:
+                            fusion_target.append('')
 
 
                         cluster_metadata.append([topic, list(predictions_topic_cluster.index)])
