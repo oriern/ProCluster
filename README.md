@@ -56,7 +56,8 @@ You are welcome to try our [demo](https://studio.oneai.com/). Look for the `Mult
   
   4. Cluster salient spans and prepare data for the Fusion model:
    ```
-    python prepare_fusion_data.py
+    python prepare_fusion_data.py --salience_pred_file <SALIENCE_MODEL_SCORES_FILE> --output_summ_dir <OUTPUT_SUMMARY_DIRECTORY_PATH> --data_path <RAW_DATA_PATH> --sim_mat_path <SIM_MAT_PATH>
+
   ```
   5. Generate a fused sentence from every cluster:
    ```
