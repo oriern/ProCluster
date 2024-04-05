@@ -6,6 +6,15 @@ from deriveSummaryDUC import read_simMats, cluster_mat, oracle_per_cluster
 import pickle
 from collections import defaultdict
 from utils import offset_str2list, offset_decreaseSentOffset, insert_string
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-salience_pred_file', type=str)
+parser.add_argument('-output_summ_dir', type=str)
+parser.add_argument('-data_path', type=str)
+parser.add_argument('-sim_mat_path', type=str)
+parser.add_argument('-alignments_path', type=str)
+args = parser.parse_args()
 
 
 
@@ -60,20 +69,6 @@ if __name__ == "__main__":
     else:
         full_sent_flag = ''
 
-    sys_model = 'roberta'
-
-
-    model_name = 'greedyMaxRouge'
-    sys_checkpoint = 'checkpoint-1200'  # 'checkpoint-180'#'checkpoint-540'#'checkpoint-1020'#'checkpoint-540'#'checkpoint-600'  #'checkpoint-1140'#'checkpoint-240'#'checkpoint-180'  # 'checkpoint-1080'
-    sys_folder = 'OIE_TAC2008_TAC2009_2010_highlighter_CDLM_greedyMaxRouge_no_alignment_filter_negative_over_sample_positive_span_classifier_head_fixed'
-
-
-    ##DUC2004
-    if DUC2004_Benchmark:
-        sys_checkpoint = 'checkpoint-1500'  # 'checkpoint-180'#'checkpoint-540'#'checkpoint-1020'#'checkpoint-540'#'checkpoint-600'  #'checkpoint-1140'#'checkpoint-240'#'checkpoint-180'  # 'checkpoint-1080'
-        sys_folder = 'OIE_DUC2003_highlighter_CDLM_greedyMaxRouge_no_alignment_filter_negative_over_sample_positive_span_classifier_head_fixed_finetuned_TAC8910'
-
-
 
 
     empty = 0
@@ -83,47 +78,26 @@ if __name__ == "__main__":
     cluster_metadata = []
 
 
-    ##full
-    full_fixed = 'fixed'
-    if DATASETS[0] == 'TAC2011':
-        full_fixed = 'full'
-
-
-
-    if DUC2004_Benchmark:
-        if DATASETS[0] == 'DUC2004':
-            metadata = pd.read_csv(
-                './OIE_highlights/{}_{}_CDLM_allAlignments_{}_truncated_metadata.csv'.format(
+    metadata = pd.read_csv(
+                './OIE_highlights/{}_{}_CDLM_fixed_truncated_metadata.csv'.format(
                     '_'.join(DATASETS),
-                    SET_TYPE, full_fixed))
-        else:
+                    SET_TYPE))
 
-            metadata = pd.read_csv(
-                './OIE_highlights/{}_{}_CDLM_greedyMaxRouge_no_alignment_{}_truncated_metadata.csv'.format(
-                    '_'.join(DATASETS),
-                    SET_TYPE, full_fixed))
-    else:
-        metadata = pd.read_csv(
-        './OIE_highlights/{}_{}_CDLM_allAlignments_{}_truncated_metadata.csv'.format(
-            '_'.join(DATASETS),
-            SET_TYPE,full_fixed))
-    predictions = pd.read_csv(
-        './models/{}/{}/{}_{}_results_None.csv'.format(sys_folder, sys_checkpoint,
-                                                                                   SET_TYPE, '_'.join(DATASETS)))
+    predictions = pd.read_csv(args.salience_pred_file)
+
     assert (len(predictions) == len(metadata))
     metadata.insert(2, "prediction", predictions['prediction'])
     predictions = metadata
 
     for SET in DATASETS:
 
-        alignments = pd.read_csv(
-            './dev{}_checkpoint-2000_negative.csv'.format(SET))
+        if SET_TYPE != 'test':
+            alignments = pd.read_csv(args.alignments_path)
+            #'./dev{}_checkpoint-2000_negative.csv'.format(SET))
 
-        sys_summary_path = './{}_system_summaries/{}/{}_'.format(SET, sys_folder,
-                                                                                               sys_checkpoint) + time.strftime(
-            "%Y%m%d-%H%M%S") + '/'
+        sys_summary_path = args.output_summ_dir
 
-        data_path = './data/{}/'.format(SET)
+        data_path = args.data_path + '/{}/'.format(SET)
         gold_summary_path = data_path + 'summaries/'
 
 
@@ -157,7 +131,7 @@ if __name__ == "__main__":
                 continue
 
             if CLUSTERING:
-                simMat = read_simMats(topic, predictions_topic, SET)
+                simMat = read_simMats(topic, predictions_topic, SET, args.sim_mat_path)
                 cluster_mat(simMat, predictions_topic['simMat_idx'].values, predictions_topic)
 
                 oracle_per_cluster(SET, gold_summary_path, topic, predictions_topic, MAX_CLUSTERS)
@@ -186,7 +160,8 @@ if __name__ == "__main__":
                             fusion_text.append(
                                 '<s> ' + ' </s> <s> '.join(list(predictions_topic_cluster['docSpanText'].values)) + ' </s>')
 
-                        fusion_target.append(find_abstractive_target(predictions_topic_cluster, alignments, topic))
+                        if SET_TYPE != 'test':
+                            fusion_target.append(find_abstractive_target(predictions_topic_cluster, alignments, topic))
 
 
                         cluster_metadata.append([topic, list(predictions_topic_cluster.index)])
@@ -195,9 +170,9 @@ if __name__ == "__main__":
 
 
     if DUC2004_Benchmark:
-        out_dir = 'fusion_data/DUC2004{}/{}/'.format(full_sent_flag,model_name)
+        out_dir = 'fusion_data/DUC2004{}/'.format(full_sent_flag)
     else:
-        out_dir = 'fusion_data/TAC2011{}/'.format(model_name)
+        out_dir = 'fusion_data/TAC2011/'
 
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
@@ -215,6 +190,15 @@ if __name__ == "__main__":
         f.write('\n'.join(fusion_text).replace('...', ' '))
     with open('{}/{}.target'.format(out_dir, SET_TYPE), 'w') as f:
         f.write('\n'.join(fusion_target).replace('...', ' '))
+
+    if SET_TYPE =='test':
+        # write "fake" files so the fusion model would run properly
+        with open('{}/{}.source'.format(out_dir, 'val'), 'w') as f:
+            f.write('\n'.join(fusion_text).replace('...', ' '))
+        with open('{}/{}.target'.format(out_dir, 'val'), 'w') as f:
+            f.write('\n'.join(fusion_text).replace('...', ' '))
+        with open('{}/{}.target'.format(out_dir, 'test'), 'w') as f:
+            f.write('\n'.join(fusion_text).replace('...', ' '))
 
 
 
